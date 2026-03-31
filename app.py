@@ -112,10 +112,10 @@ if st.sidebar.button('Predict Now'):
         st.subheader("Factor Importance")
         # PINK BAR CHART
         fig1, ax1 = plt.subplots()
-        # Set color to 'hotpink'
+        # Set color to 'babypink'
         sns.barplot(x=model.feature_importances_, 
                     y=['Hour', 'Day', 'Density', 'Weather', 'Road', 'Speed'], 
-                    ax=ax1, color='babypink') 
+                    ax=ax1, color='#F4C2C2') 
         ax1.set_xlabel("Impact Score")
         st.pyplot(fig1)
 
@@ -125,7 +125,7 @@ if st.sidebar.button('Predict Now'):
         fig2, ax2 = plt.subplots()
         labels = ['Low Risk', 'Medium Risk', 'High Risk']
         ax2.pie(prediction_proba, labels=labels, autopct='%1.1f%%', 
-                colors=['pink', 'lightgreen', 'lightblue'], startangle=140)
+                colors=['#90EE90', '#FFB6C1', '#ADD8E6'], startangle=140)
         st.pyplot(fig2)
 
 else:
