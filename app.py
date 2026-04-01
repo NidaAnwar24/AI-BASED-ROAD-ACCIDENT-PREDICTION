@@ -12,8 +12,8 @@ from datetime import datetime
 # 1. PAGE CONFIG
 # ─────────────────────────────────────────────
 st.set_page_config(
-    page_title="SENTINEL — Traffic Intelligence",
-    page_icon="🛡️",
+    page_title="VANGUARD — Traffic Intelligence",
+    page_icon="🚦",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -31,8 +31,8 @@ st.markdown("""
     --bg-card:      #ffffff;
     --accent-cyan:  #4f46e5;
     --accent-red:   #ef4444;
-    --accent-pink:  #ffb3c6;       /* baby pink  — replaces amber/yellow */
-    --accent-green: #90ee90;       /* light green — replaces dark green  */
+    --accent-pink:  #ffb3c6;
+    --accent-green: #90ee90;
     --accent-purple:#7c3aed;
     --border-glow:  rgba(79,70,229,0.22);
     --grid-color:   rgba(79,70,229,0.055);
@@ -43,7 +43,7 @@ st.markdown("""
     --font-mono:    'Share Tech Mono', monospace;
 }
 
-/* ── Global: vibrant gradient-mesh background ── */
+/* ── Global ── */
 * { box-sizing: border-box; }
 .stApp {
     background:
@@ -57,7 +57,6 @@ st.markdown("""
     color: var(--text-primary);
     font-family: var(--font-body);
 }
-/* grid overlay */
 .stApp::before {
     content: '';
     position: fixed;
@@ -147,7 +146,6 @@ h1 { font-size: 13px !important; letter-spacing: 6px !important; }
         #d1fae5 72%, #d1fae5 100%);
     box-shadow: 0 6px 24px rgba(79,70,229,0.12);
 }
-/* dashed centre line */
 .road-scene::after {
     content: '';
     position: absolute;
@@ -175,11 +173,8 @@ h1 { font-size: 13px !important; letter-spacing: 6px !important; }
     animation-timing-function: linear;
     animation-iteration-count: infinite;
 }
-/* Top lane — going right */
 .veh.top  { top: 10px;  animation-name: drive-right; }
-/* Bottom lane — going left */
 .veh.bot  { top: 55px;  animation-name: drive-left;  }
-
 .veh.d1 { animation-duration: 2.8s; animation-delay: 0.0s; }
 .veh.d2 { animation-duration: 3.6s; animation-delay: 0.7s; }
 .veh.d3 { animation-duration: 2.3s; animation-delay: 1.4s; }
@@ -229,8 +224,94 @@ h1 { font-size: 13px !important; letter-spacing: 6px !important; }
     line-height: 1.8;
 }
 
+/* ══════════════ PREDICTION MESSAGE BANNER ══════════════ */
+.pred-banner {
+    border-radius: 16px;
+    padding: 26px 32px;
+    margin: 20px 0 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+    position: relative;
+    overflow: hidden;
+}
+.pred-banner-icon {
+    font-size: 52px;
+    line-height: 1;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
+}
+.pred-banner-content { flex: 1; }
+.pred-banner-headline {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+.pred-banner-msg {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+.pred-banner-tips {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    line-height: 2;
+    opacity: 0.85;
+}
+.pred-banner-tips span {
+    display: inline-block;
+    margin-right: 18px;
+}
+
+/* LOW risk banner — light green theme */
+.pred-banner-low {
+    background: linear-gradient(135deg, rgba(144,238,144,0.25) 0%, rgba(144,238,144,0.08) 100%);
+    border: 2px solid rgba(144,238,144,0.75);
+    box-shadow: 0 6px 28px rgba(144,238,144,0.18);
+}
+.pred-banner-low .pred-banner-headline { color: #15803d; }
+.pred-banner-low .pred-banner-msg      { color: #166534; }
+.pred-banner-low .pred-banner-tips     { color: #4d7c5a; }
+
+/* ELEVATED risk banner — baby pink theme */
+.pred-banner-elevated {
+    background: linear-gradient(135deg, rgba(255,179,198,0.28) 0%, rgba(255,179,198,0.08) 100%);
+    border: 2px solid rgba(255,179,198,0.85);
+    box-shadow: 0 6px 28px rgba(255,179,198,0.22);
+}
+.pred-banner-elevated .pred-banner-headline { color: #be185d; }
+.pred-banner-elevated .pred-banner-msg      { color: #9d174d; }
+.pred-banner-elevated .pred-banner-tips     { color: #a1526c; }
+
+/* CRITICAL risk banner — red theme */
+.pred-banner-critical {
+    background: linear-gradient(135deg, rgba(239,68,68,0.16) 0%, rgba(239,68,68,0.05) 100%);
+    border: 2px solid rgba(239,68,68,0.72);
+    box-shadow: 0 6px 28px rgba(239,68,68,0.18);
+    animation: critPulse 2s ease-in-out infinite;
+}
+.pred-banner-critical .pred-banner-headline { color: #b91c1c; }
+.pred-banner-critical .pred-banner-msg      { color: #991b1b; }
+.pred-banner-critical .pred-banner-tips     { color: #b45454; }
+
+/* watermark text behind banner */
+.pred-banner::before {
+    position: absolute; right: 12px; top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-display);
+    font-size: 88px; font-weight: 900;
+    pointer-events: none; letter-spacing: -3px;
+}
+.pred-banner-low::before      { content: 'SAFE';     color: rgba(144,238,144,0.10); }
+.pred-banner-elevated::before { content: 'CAUTION';  color: rgba(255,179,198,0.10); }
+.pred-banner-critical::before { content: 'DANGER';   color: rgba(239,68,68,0.07);  }
+
 /* ══════════════ STATUS PANELS ══════════════ */
-/* OPTIMAL — light green */
 .status-optimal {
     background: linear-gradient(135deg, rgba(144,238,144,0.20) 0%, rgba(144,238,144,0.05) 100%);
     border: 2px solid rgba(144,238,144,0.65);
@@ -250,7 +331,6 @@ h1 { font-size: 13px !important; letter-spacing: 6px !important; }
     letter-spacing: -4px; pointer-events: none;
 }
 
-/* ELEVATED — baby pink */
 .status-elevated {
     background: linear-gradient(135deg, rgba(255,179,198,0.22) 0%, rgba(255,179,198,0.06) 100%);
     border: 2px solid rgba(255,179,198,0.75);
@@ -270,7 +350,6 @@ h1 { font-size: 13px !important; letter-spacing: 6px !important; }
     letter-spacing: -4px; pointer-events: none;
 }
 
-/* CRITICAL — red */
 .status-critical {
     background: linear-gradient(135deg, rgba(239,68,68,0.14) 0%, rgba(239,68,68,0.04) 100%);
     border: 2px solid rgba(239,68,68,0.62);
@@ -310,7 +389,6 @@ h1 { font-size: 13px !important; letter-spacing: 6px !important; }
     font-family: var(--font-mono); font-size: 13px;
     letter-spacing: 2px; color: var(--text-muted); margin-bottom: 18px;
 }
-/* recommendation box — baby pink border */
 .reco-box {
     margin-top: 18px;
     background: rgba(255,179,198,0.12);
@@ -376,7 +454,6 @@ h1 { font-size: 13px !important; letter-spacing: 6px !important; }
     border-radius: 14px; padding: 20px;
     box-shadow: 0 4px 18px rgba(79,70,229,0.07);
 }
-/* Terminal log */
 .terminal-log {
     background: #1e1b4b;
     border: 1px solid rgba(167,139,250,0.28);
@@ -386,9 +463,9 @@ h1 { font-size: 13px !important; letter-spacing: 6px !important; }
     box-shadow: inset 0 2px 14px rgba(0,0,0,0.3);
 }
 .log-line           { opacity:.8; line-height:1.9; }
-.log-line span      { color: #90ee90; }   /* light green */
-.log-line.warn span { color: #ffb3c6; }   /* baby pink   */
-.log-line.crit span { color: #ef4444; }   /* red         */
+.log-line span      { color: #90ee90; }
+.log-line.warn span { color: #ffb3c6; }
+.log-line.crit span { color: #ef4444; }
 
 /* hide chrome */
 #MainMenu, footer, header { visibility: hidden; }
@@ -431,7 +508,7 @@ except Exception:
 # 4. HELPERS
 # ─────────────────────────────────────────────
 RISK_LABELS = {0:'LOW', 1:'ELEVATED', 2:'CRITICAL'}
-RISK_COLORS = {0:'#90ee90', 1:'#ffb3c6', 2:'#ef4444'}   # light-green / baby-pink / red
+RISK_COLORS = {0:'#90ee90', 1:'#ffb3c6', 2:'#ef4444'}
 CHART_BG    = '#f8f7ff'
 
 WEATHER_RISK = {'Sunny':0.05, 'Cloudy':0.15, 'Rainy':0.55, 'Snowy':0.90}
@@ -463,10 +540,80 @@ def brake_dist(spd, surf):
     mu = {'Dry':0.8,'Wet':0.45,'Icy':0.15}[surf]
     return round((spd/3.6)**2 / (2*9.81*mu), 1)
 
+def get_prediction_banner(pred, weather, road_surface, speed_limit, safe_spd, r_score):
+    """Return HTML for the attractive prediction message banner."""
+    if pred == 0:
+        # LOW RISK — green, cheerful and encouraging
+        headline = "✅  ALL CLEAR — SAFE TO DRIVE"
+        msg = (
+            "Road conditions are favourable. Enjoy your journey and stay alert. "
+            "A safe driver is always a confident driver!"
+        )
+        tips_items = [
+            "🟢 Maintain steady speed",
+            "🟢 Keep a safe following distance",
+            "🟢 Stay hydrated on long drives",
+            "🟢 Check mirrors every 5–8 seconds",
+        ]
+        banner_cls = "pred-banner-low"
+
+    elif pred == 1:
+        # ELEVATED RISK — pink, cautionary
+        speed_note = f"Consider slowing to {safe_spd} km/h." if safe_spd else "Reduce speed significantly."
+        headline = "⚠️  HEADS UP — DRIVE WITH CARE"
+        msg = (
+            f"Conditions are above normal risk thresholds. {speed_note} "
+            "Stay focused, increase your following distance, and be extra patient on the road."
+        )
+        tips_items = [
+            "🩷 Reduce speed gradually",
+            "🩷 Increase following gap to 4+ seconds",
+            "🩷 Avoid sudden braking or steering",
+            "🩷 Watch for other drivers' behaviour",
+        ]
+        banner_cls = "pred-banner-elevated"
+
+    else:
+        # CRITICAL RISK — red, urgent
+        headline = "🚨  DANGER AHEAD — EXTREME CAUTION"
+        msg = (
+            "Multi-factor hazard detected! Current conditions are highly dangerous. "
+            "Avoid this route if possible, pull over safely, or wait for conditions to improve. "
+            "Your life is worth more than any journey."
+        )
+        tips_items = [
+            "🔴 Consider not driving at all",
+            "🔴 If driving: maximum 30 km/h",
+            "🔴 Hazard lights on in poor visibility",
+            "🔴 Alert emergency contacts of your route",
+        ]
+        banner_cls = "pred-banner-critical"
+
+    tips_html = "".join(f'<span>{t}</span>' for t in tips_items)
+    risk_bar_color = RISK_COLORS[pred]
+
+    html = f"""
+    <div class="pred-banner {banner_cls}">
+      <div class="pred-banner-content">
+        <div class="pred-banner-headline">{headline}</div>
+        <div class="pred-banner-msg">{msg}</div>
+        <div class="pred-banner-tips">{tips_html}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-family:var(--font-display);font-size:11px;color:var(--text-muted);
+                    letter-spacing:3px;margin-bottom:6px;">RISK SCORE</div>
+        <div style="font-family:var(--font-display);font-size:42px;font-weight:900;
+                    color:{risk_bar_color};line-height:1;">{r_score:.0f}</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">/ 100</div>
+      </div>
+    </div>
+    """
+    return html
+
 def gen_log(pred, wthr, surf, dens, spd, hr):
     ts = datetime.now().strftime("%H:%M:%S")
     lines = [
-        (f"[{ts}] SENTINEL v4.2 — Scenario analysis initiated", "ok"),
+        (f"[{ts}] VANGUARD v4.2 — Scenario analysis initiated", "ok"),
         (f"[{ts}] INPUTS  → Hour={hr:02d}h  Density={dens:.2f}  Speed={spd}km/h", "ok"),
         (f"[{ts}] ENV     → Weather={wthr}  Surface={surf}", "ok"),
     ]
@@ -491,7 +638,7 @@ now_str = datetime.now().strftime("%Y-%m-%d  %H:%M:%S UTC")
 st.markdown(f"""
 <div class="sentinel-header">
   <div>
-    <div class="sentinel-logo">SENTINEL</div>
+    <div class="sentinel-logo">VANGUARD</div>
     <div class="sentinel-sub">TRAFFIC INTELLIGENCE SYSTEM  ·  v4.2.0</div>
   </div>
   <div class="sentinel-clock">
@@ -538,11 +685,9 @@ if analyze_btn:
     # ══ VEHICLE ANIMATION ══
     st.markdown("""
     <div class="road-scene">
-      <!-- top lane: going right -->
       <div class="veh top d1">🚗</div>
       <div class="veh top d2">🚕</div>
       <div class="veh top d3">🏎️</div>
-      <!-- bottom lane: going left -->
       <div class="veh bot d4">🚛</div>
       <div class="veh bot d5">🚌</div>
       <div class="veh bot d6">🚙</div>
@@ -558,6 +703,12 @@ if analyze_btn:
     b_dist     = brake_dist(speed_limit, road_surface)
     stop_dist  = r_dist + b_dist
     safe_spd   = find_safe_speed(input_df, weather, road_surface)
+
+    # ══ ATTRACTIVE PREDICTION BANNER ══
+    st.markdown(
+        get_prediction_banner(prediction, weather, road_surface, speed_limit, safe_spd, r_score),
+        unsafe_allow_html=True
+    )
 
     # ── KPI Row ──
     st.markdown('<div class="kpi-grid">', unsafe_allow_html=True)
@@ -613,7 +764,7 @@ if analyze_btn:
         for lbl, val, clr in zip(
             ['LOW RISK','ELEVATED','CRITICAL'],
             proba,
-            ['#90ee90','#ffb3c6','#ef4444']   # light-green / baby-pink / red
+            ['#90ee90','#ffb3c6','#ef4444']
         ):
             pct = val * 100
             st.markdown(f"""
@@ -632,7 +783,6 @@ if analyze_btn:
     # ── 3 Charts ──
     c1, c2, c3 = st.columns(3)
 
-    # Feature Importance
     with c1:
         st.markdown('<div class="section-label">FACTOR IMPACT ANALYSIS</div>', unsafe_allow_html=True)
         fig, ax = plt.subplots(figsize=(5,3.8))
@@ -644,7 +794,7 @@ if analyze_btn:
                 color=RISK_COLORS[prediction], alpha=0.85, height=0.55,
                 edgecolor='white', linewidth=0.5)
         for i in idx:
-            ax.text(imp[i]+0.004, idx.tolist().index(i)+0 ,
+            ax.text(imp[i]+0.004, idx.tolist().index(i)+0,
                     f'{imp[i]:.3f}', va='center',
                     color='#6b7280', fontsize=8, fontfamily='monospace')
         ax.spines[:].set_visible(False)
@@ -653,7 +803,6 @@ if analyze_btn:
         ax.set_xlim(0, max(imp)*1.28)
         plt.tight_layout(pad=0.4); st.pyplot(fig); plt.close()
 
-    # Radar
     with c2:
         st.markdown('<div class="section-label">MULTI-FACTOR RISK RADAR</div>', unsafe_allow_html=True)
         rlbls  = ['Speed','Density','Weather','Surface','Time','Overall']
@@ -674,7 +823,6 @@ if analyze_btn:
         ax.grid(color='#e5e7eb', linewidth=0.5)
         plt.tight_layout(pad=0.4); st.pyplot(fig); plt.close()
 
-    # Speed Sweep
     with c3:
         st.markdown('<div class="section-label">SPEED RISK SWEEP</div>', unsafe_allow_html=True)
         spds = [30,50,70,90,110]
@@ -714,7 +862,7 @@ else:
         border:2px dashed rgba(79,70,229,0.22);border-radius:18px;
         background:rgba(255,255,255,0.55);backdrop-filter:blur(10px);
         box-shadow:0 4px 28px rgba(79,70,229,0.07);">
-      <div style="font-size:54px;margin-bottom:18px;">🛡️</div>
+      <div style="font-size:54px;margin-bottom:18px;">🚦</div>
       <div style="font-family:'Orbitron',monospace;font-size:13px;
                   letter-spacing:5px;color:#4f46e5;margin-bottom:10px;">
         AWAITING SCENARIO INPUT
@@ -731,6 +879,6 @@ st.markdown("""
 <div style="margin-top:40px;border-top:1px solid rgba(79,70,229,0.12);
     padding-top:14px;font-family:'Share Tech Mono',monospace;
     font-size:10px;color:rgba(107,114,128,0.55);letter-spacing:2px;text-align:center;">
-  SENTINEL TRAFFIC INTELLIGENCE  ·  RESEARCH-GRADE MODEL  ·  NOT FOR OPERATIONAL USE
+  VANGUARD TRAFFIC INTELLIGENCE  ·  RESEARCH-GRADE MODEL  ·  NOT FOR OPERATIONAL USE
 </div>
 """, unsafe_allow_html=True)
